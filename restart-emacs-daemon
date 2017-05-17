@@ -1,0 +1,3 @@
+#!/bin/bash
+eval ~/bin/stop-emacs-daemon && \
+    eval ~/bin/start-emacs-daemon

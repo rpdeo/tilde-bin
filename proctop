@@ -1,0 +1,6 @@
+#!/bin/sh
+# show top 10 processes by CPU and MEM
+ps -c -r -ax -o command,pcpu,pid,time | head -n 11 > /tmp/t1.$$
+ps -c -m -ax -o command,pmem,pid,rss=RSIZE | head -n 11 > /tmp/t2.$$
+paste /tmp/t1.$$ /tmp/t2.$$
+rm -f /tmp/t1.$$ /tmp/t2.$$

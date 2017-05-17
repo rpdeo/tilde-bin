@@ -1,0 +1,9 @@
+#!/bin/sh
+
+# get imported modules within a python source code sample for exploratory
+# analysis.
+
+find . -iname "*.py" -print0 | \
+    xargs -0 egrep "^(from\ .*\ |import\ .*$)" | \
+    awk -F: '{print $1" "$2}' | \
+    awk '{print $1" "$3}'

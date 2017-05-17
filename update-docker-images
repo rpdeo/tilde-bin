@@ -1,0 +1,18 @@
+#!/bin/sh
+
+# Update all images from docker-hub with latest tags while ignoring
+# custom-ones tagged with '$USER/...:latest'.
+
+# update to latest versions
+docker images | \
+       grep latest | \
+       grep -v $USER | \
+       awk '{print $1":"$2}' | \
+       xargs -n1 docker pull
+
+# clean up old and dangling images
+docker images | \
+    grep -v "^<none>" | \
+    grep "<none>" | \
+    awk '{print $3}' | \
+    xargs -n1 docker rmi

@@ -1,0 +1,9 @@
+#!/usr/bin/awk
+{ 
+    freq[""i""]++; 
+}
+END{ 
+    for (word in freq) {
+	print freq[word]", "word;
+    }
+}

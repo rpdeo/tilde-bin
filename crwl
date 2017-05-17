@@ -1,0 +1,18 @@
+#!/bin/sh
+#
+# wget for mortals
+#
+# Avoid unnecessary index sort files...
+# https://askubuntu.com/questions/719410/wget-web-crawler-retrieves-unwanted-index-html-index-files
+#
+
+wget --tries=inf \
+     --timestamping \
+     --recursive \
+     --level=inf \
+     --convert-links \
+     --random-wait \
+     --page-requisites \
+     --no-parent \
+     -R '\?C=' \
+     "$@"

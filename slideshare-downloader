@@ -1,0 +1,18 @@
+#!/bin/sh
+
+#
+# Download slideshare presentations without logging in.
+#
+# Needs https://github.com/ericchiang/pup
+#
+# CSS Selector string can be obtained with dev-tools in chrome/firefox
+#
+
+slideshare_css_selector_magic='#svPlayerId > div.stage > div.slide_container.jsplBgColorBigfoot.tall_img > section.slide.show > img attr{data-full}'
+
+curl -s "$@" | \
+    pup ${slideshare_css_selector_magic} | \
+    sed 's/\?.*$//' | \
+    while read url; do 
+        curl -s -o $(basename ${url}) ${url} && echo $(basename ${url});
+    done

@@ -1,0 +1,7 @@
+#!/bin/bash
+
+# need formail installed which comes with procmail
+# Convert an .eml file to .mbox and open in mutt for viewing
+
+formail -b < $1 > $1.mbox
+echo converted $1 to mbox format $1.mbox

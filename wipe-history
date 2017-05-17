@@ -1,0 +1,14 @@
+#!/bin/bash
+# cleanup
+while read filename; do
+  cp /dev/null $filename 2>&1 >/dev/null
+done << __EOF__
+~/.bash_history
+~/.viminfo
+~/.lesshst
+~/.sh_history
+~/.histfile
+~/.emacs.d/history
+~/.mysql_history
+__EOF__
+history -c

@@ -1,0 +1,5 @@
+#!/bin/bash
+echo -n "[+] Stopping Emacs daemon..."
+/usr/local/bin/emacsclient -n -c -e '(save-buffers-kill-emacs)' >/dev/null 2>&1
+echo "done"
+ps aux | grep -i Emacs | grep -v grep

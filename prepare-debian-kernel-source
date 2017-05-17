@@ -1,0 +1,24 @@
+#!/bin/sh
+#
+# Run as root
+#
+
+if [ "x$(id -u)" != "x0" ]; then
+  echo "You must run this script as root!"
+  exit 1
+fi
+
+if [ $(dpkg -s linux-source | grep -c installed) != 1 ];
+    apt-get install -y linux-source
+fi
+pkg=$(dpkg -L linux-source-`uname -r` | grep 'bz2$')
+cd /usr/src
+rm -rf linux-source-`uname -r`
+tar -jxvf $pkg
+ln -sf linux-source-`uname -r` linux
+cd linux
+cp -f /boot/config-`uname -r` .config
+make oldconfig
+make prepare
+make scripts
+echo "Kernel sources configured for running kernel, now compile the external module."

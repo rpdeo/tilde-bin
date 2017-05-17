@@ -1,0 +1,5 @@
+#!/bin/bash
+
+for i in $(seq 8 8 1500); do 
+    echo "$i, $(ping -s $i -c 10 $1 | grep '^rtt' | cut -d\  -f4)"
+done

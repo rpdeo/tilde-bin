@@ -1,0 +1,10 @@
+#!/bin/bash
+EPID=$(pgrep Emacs)
+if [ "x$EPID" = "x" ]; then
+  echo -n "[+] Starting Emacs daemon..."
+  /usr/local/bin/emacs --daemon &>/dev/null
+  echo "done"
+else
+  echo "Emacs is already running..."
+  ps aux | grep -i Emacs | grep -v grep
+fi

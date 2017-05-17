@@ -1,0 +1,63 @@
+#!/bin/bash
+
+INTERVAL="5"
+MAX="infinite"
+
+function usage () {
+    cat <<EOF
+Usage:
+  $(basename "$0") -nNUM -mMAX CMD
+
+NUM -- time interval in seconds (default is '$INTERVAL's).
+MAX -- execute CMD only MAX number of times (default: $MAX).
+CMD -- command to be run every NUM internal seconds.
+
+This shell-script tries to emulate behaviour of watch(5) command from a
+GNU/Linux system.
+EOF
+}
+
+[ $# -lt 1 ] && usage && exit 1
+
+args=$(getopt "n:m:" "$@")
+errorcode=$?
+[ $errorcode -ne 0 ] && usage && exit 1
+
+# don't quote $args
+set -- $args
+
+for i
+do
+    case $i
+    in
+        -n)
+            INTERVAL="$2"
+            shift;shift
+            ;;
+        -m)
+            MAX="$2"
+            shift;shift
+            ;;
+        --)
+            shift;
+            break
+            ;;
+    esac
+done
+CMD="$*"
+
+counter=1
+while true
+do
+    echo "Running '${CMD}' every $INTERVAL: Ran $counter times"
+    echo "----------------------------------------------------"
+    $CMD
+    sleep "$INTERVAL"
+    if [ "$MAX" != "infinite" ]; then
+        if [ "$counter" -gt "$MAX" ]; then
+            break;
+        fi
+    fi
+    counter=$((counter + 1))
+    clear
+done

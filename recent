@@ -1,0 +1,15 @@
+#!/bin/sh
+# list 10 most recently changed files based on file timestamp
+
+dir="$1"
+lines="$2"
+if [ ! -z $dir ]; then
+  if [ ! -z $lines ]; then
+    ls -vlart $dir | tail -$lines | grep -v "^drwx.*\.$"
+  else
+    ls -vlart $dir | tail -10 | grep -v "^drwx.*\.$"
+  fi
+else
+  ls -vlart | tail -10 | grep -v "^drwx.*\.$"
+fi
+

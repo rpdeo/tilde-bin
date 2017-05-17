@@ -1,0 +1,10 @@
+#!/bin/bash
+
+#
+# return a histogram of all file extensions in current directory
+#
+
+find . -maxdepth 1 -type f -print | \
+    ggrep -oP "\.[^\.]+$" | \
+    sort | uniq -c | sort -n | \
+    awk '{ if (length(gather[$1])>0) { gather[$1]=gather[$1]", "$2; } else { gather[$1]=$2; } } END { for (count in gather) { print count", "gather[count] | "sort -rn" } }'

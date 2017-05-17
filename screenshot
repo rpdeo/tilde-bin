@@ -1,0 +1,38 @@
+#!/bin/bash
+#
+# Screenshots! For use when all we got is ImageMagick!
+#
+
+# set SCREENSHOT_DIR in ~/.profile to specific directory if you want a
+# different path than below
+
+[ "x${SCREENSHOT_DIR}" = "x" ] && export SCREENSHOT_DIR="$HOME/Pictures/Screenshots"
+
+# ensure directory is available
+mkdir -p ${SCREENSHOT_DIR}
+
+# lets now have pesky ":" and other annoying chars that make image names
+# unworkable on other OSes
+saveas="${SCREENSHOT_DIR}/screenshot_"$(date '+%Y%m%d%H%M%S')".png"
+
+# select complete screen
+[  "x$1" = "x" ] && \
+    import -window root $saveas
+
+case "$1" in
+  "window")
+    # select current window
+    import -window "$(xdotool getwindowfocus -f)" $saveas
+    ;;
+  "choose")
+    # Select a region
+    import $saveas
+    ;;
+  *)
+    echo "$0 -- to capture full desktop"
+    echo "$0 [window|choose]"
+    echo "   window -- capture a specific window, select by clicking with mouse."
+    echo "   choose -- capture a portion of screen with mouse."
+    exit 1
+esac
+

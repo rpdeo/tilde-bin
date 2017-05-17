@@ -1,0 +1,16 @@
+#!/bin/bash
+echo
+echo "This script wraps the certificate creation process for use with SASL
+client certificate based auth mechanism for IRC networks. Certificates are
+associated with nicknames, so you will need one certificate per nickname."
+echo
+mkdir "$HOME/.irssi/certs" 2>/dev/null
+read -r -p 'Enter your IRC nickname: ' NICK
+openssl req -x509 -sha256 -new -newkey rsa:4096 -nodes -out "$NICK.pem" -keyout "$NICK.pem"
+echo -n "Your SHA1 certificate fingerprint is: "
+openssl x509 -noout -in "$NICK.pem" -fingerprint | tr "[:upper:]" "[:lower:]" | tr -d ":"
+echo "Register your certificate fingerprint as /msg NickServ CERT ADD <certificate-fingerprint> on respective IRC network."
+echo "Moving your $NICK.pem to ~/.irssi/certs"
+mv -iv "$NICK.pem" "$HOME/.irssi/certs/"
+sleep 2
+chmod 0400 "$HOME/.irssi/certs/$NICK.pem"
