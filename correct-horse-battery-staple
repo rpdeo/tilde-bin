@@ -1,0 +1,22 @@
+#!/bin/sh
+
+[ ! -z ${DEBUG} ] && set -x
+
+# generate 4 word passphrases
+NWORDS="$1"
+[ $# -eq 0 ] && NWORDS="4"
+
+# find correct shuf program
+[ -x "/usr/local/bin/gshuf" ] && SHUF="/usr/local/bin/gshuf"
+[ -x "/usr/local/bin/shuf" ] && SHUF="/usr/local/bin/shuf"
+[ -x "/usr/bin/shuf" ] && SHUF="/usr/bin/shuf"
+[ -z ${SHUF} ] && {
+  echo "shuf program not found. exiting."
+  exit 1
+}
+
+DICT="/usr/share/dict/words"
+[ ! -z $2 ] && [ -f $2 ] && DICT="$2"
+
+# shuffle lines of dict file and pick NWORDS from top
+${SHUF} ${DICT} | head -${NWORDS} | xargs

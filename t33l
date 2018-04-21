@@ -1,0 +1,5 @@
+#!/bin/sh
+cat - | while read -r line;
+do
+    echo ${line} | tr [34105] [eaiou]
+done

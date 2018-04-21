@@ -6,13 +6,16 @@
 # https://askubuntu.com/questions/719410/wget-web-crawler-retrieves-unwanted-index-html-index-files
 #
 
-wget --tries=inf \
-     --timestamping \
-     --recursive \
-     --level=inf \
+wget \
+     --adjust-extension \
+     --backup-converted \
      --convert-links \
-     --random-wait \
-     --page-requisites \
+     --level=inf \
      --no-parent \
+     --page-requisites \
+     --random-wait \
+     --recursive \
+     --timestamping \
+     --tries=inf \
      -R '\?C=' \
      "$@"

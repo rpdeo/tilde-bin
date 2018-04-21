@@ -1,0 +1,41 @@
+#!/bin/bash
+
+#
+# Find if a remote path is a directory or a file, and recreate the path tree
+# locally; if it is a directory, downoad all its contents, if it is only one
+# file, download only that one.
+#
+# we combine this with a local git repo, to track changes we do on remote
+# cloud servers. Thus maintaining a versioned trail of our configuration
+# settings. A typical workflow will be:
+#
+# 1. Edit config file on remote
+#
+# 2. Run `backup-remote hostname absolute_file_path` in top-level config backup
+#    directory on your local machine.
+#
+# 3. Run `git commit -m 'what you did...'`
+#
+# 4. Rinse and repeat.
+#
+# The backup operation also require remote cloud server to enable root login
+# over ssh with pubkey auth. scp connects as root@remote.
+#
+
+remote=$1
+path=$2
+is_dir=$(ssh $remote "[ -d $path ] && echo yes || echo no")
+dir_name=$(dirname $path | sed -E 's:^/+::g')
+if [ "x$dir_name" == "x" ]; then
+    # if we get a top-level dir like /etc, make sure dir_name is not empty
+    dir_name=$(echo $path | sed -E 's:^/+::g')
+fi
+echo -n "Creating path $dir_name..."
+mkdir -p $dir_name && echo "OK"
+echo -n "Copying $path..."
+# scp command line semantics are different if we want to copy a directory vs. a file
+if [ "$is_dir" == "yes" ]; then
+    scp -r "root@$remote:$path/" "$dir_name/" && echo "OK" || echo "ERROR"
+else
+    scp -r "root@$remote:$path" "$dir_name/"  && echo "OK" || echo "ERROR"
+fi

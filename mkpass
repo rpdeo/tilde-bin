@@ -1,0 +1,11 @@
+#!/bin/sh
+
+N=$1
+[ -z $N ] && N=35
+cat /dev/urandom | \
+    head -c 100000 | \
+    strings -a | \
+    ggrep -oP "\w+" | \
+    xargs | \
+    tr -d ' ' | \
+    tail -c $N
