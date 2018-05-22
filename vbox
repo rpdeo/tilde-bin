@@ -1,0 +1,56 @@
+#!/bin/bash
+
+# set -x
+
+#
+# vbox.sh - make gentle the command-line interface of VirtualBox
+#
+
+usage() {
+    # Print usage help message
+    me=$(basename $0)
+    cat <<EOF
+$me -- Command-line Porcelain for VirtualBox
+
+Usage:
+
+    $me ls
+    $me ps
+    $me run $uuid
+    $me save $uuid
+
+For more see:
+
+    VBoxManage | less -S
+EOF
+    exit 1
+}
+
+command="$1"
+[ "x$command" = "x" ] && usage
+shift
+args="$@"
+
+case "$command" in
+    "ls")
+        VBoxManage list vms | \
+            sed 's/{//g;s/}//g;' | \
+            awk -F'" ' '{print $2" "$1"\"";}'
+        ;;
+    "ps")
+        VBoxManage list runningvms | \
+            sed 's/{//g;s/}//g;' | \
+            awk -F'" ' '{print $2" "$1"\"";}'
+        ;;
+    "run")
+        uuid="$1"
+        VBoxManage startvm $uuid --type headless
+        ;;
+    "save")
+        uuid="$1"
+        VBoxManage controlvm $uuid savestate
+        ;;
+    "*")
+        usage
+        ;;
+esac
