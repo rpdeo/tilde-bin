@@ -1,0 +1,17 @@
+#!/bin/sh
+
+# generate a random mac-address with "openssl rand" command.
+
+N=50
+for i in $(seq 1 $N);
+do
+    openssl rand -rand /dev/urandom -hex 1000 2>/dev/null | \
+        tr A-Z a-z | \
+        sed 's/\(..\)/\1 /g' | \
+        sed 's/[0-9g-z][0-9g-z]\ //g' | \
+        sed 's/\ /:/g' | \
+        sed 's/\(.\{17\}\)/\1 /' | \
+        cut -f1 -d' '
+done | nl | \
+    grep "^\ \+$(($RANDOM % $N))" | \
+    cut -f2
